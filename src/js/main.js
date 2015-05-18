@@ -8,5 +8,7 @@ var MyHandler = new Handler(function(data){
 	MyUniverse.toggleCell.call(MyUniverse,data.i,data.j)
 	//MyUniverse.logU.call(MyUniverse);
 	MyPainter.redrawCell.call(MyPainter,data.i,data.j,MyUniverse.leUniverse[data.i][data.j]);
+},function(){
+	MyUniverse.oneTurn.call(MyUniverse);
 });
 console.log("mufasa");
