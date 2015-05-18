@@ -14,7 +14,7 @@ var MyHandler = new Handler(function(data){
 });
 document.addEventListener('cellDeath',function(e){
 	var data = e.detail;
-	MyPainter.redrawCell.call(MyPainter,data.y,data.x,0);
+	MyPainter.redrawCell.call(MyPainter,data.y,data.x,data.state);
 	//MyUniverse.logU.call(MyUniverse);
 },false);
 console.log("mufasa");
@@ -125,7 +125,7 @@ Universe.prototype.toggleCell = function(y,x) {
 
 Universe.prototype.oneTurn = function(){
 	var i = 0, j;
-	var event;
+	var event, newState;
 	var board = this.leUniverse;
 	//console.log(board[-1][-1]);
 	var neighbors;
@@ -138,7 +138,7 @@ Universe.prototype.oneTurn = function(){
 			var i2 = i-1, limitI = i+1;
 			var j2,limitJ;
 			//needs to be alive to die :v
-			if(board[i][j] === 1){				
+			//if(board[i][j] === 1){				
 				for(;i2<=limitI;i2+=1){
 					j2 = j-1, limitJ = j + 1;
 					for(;j2<=limitJ;j2+=1){
@@ -152,20 +152,34 @@ Universe.prototype.oneTurn = function(){
 						}
 					}
 				}
-				//substract himself
-				neighbors-=1;
-				//if there're less than 2 neighbors, cell dies cause underpopulation
-				//if there're more than 3 neighbors, cell dies cause overpopulation
-				if(neighbors < 2 || neighbors > 3){
-					cellsToDie.push({i:i,j:j});
+
+				if(board[i][j] === 1){	
+					//substract himself
+					neighbors-=1;
+					//if there're less than 2 neighbors, cell dies cause underpopulation
+					//if there're more than 3 neighbors, cell dies cause overpopulation
+					if(neighbors < 2 || neighbors > 3){
+						cellsToDie.push({i:i,j:j});
+					}
+				}else{
+					if(neighbors === 3){
+						newLife.push({i:i,j:j});
+					}
 				}
-			}
+			//}
 		}
 	}
 	
 	for(i = 0;i<cellsToDie.length;i+=1){
 		this.leUniverse[cellsToDie[i]['i']][cellsToDie[i]['j']] = 0;
-		event = new CustomEvent('cellDeath', { 'detail': {y:cellsToDie[i]['i'],x:cellsToDie[i]['j']} });
+		event = new CustomEvent('cellDeath', { 'detail': {y:cellsToDie[i]['i'],x:cellsToDie[i]['j'],state:0} });
+		document.dispatchEvent(event);	
+	}
+
+	for(i = 0;i<newLife.length;i+=1){
+		console.log(newLife[i]);
+		this.leUniverse[newLife[i]['i']][newLife[i]['j']] = 1;
+		event = new CustomEvent('cellDeath', { 'detail': {y:newLife[i]['i'],x:newLife[i]['j'],state:1} });
 		document.dispatchEvent(event);	
 	}
 };
