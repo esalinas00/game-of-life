@@ -47,6 +47,7 @@ Universe.prototype.oneTurn = function(){
 	//console.log(board[-1][-1]);
 	var neighbors;
 	var cellsToDie = [];
+	var newLife = [];
 	for(; i < this.width; i+=1 ){
 		for(j = 0; j < this.width; j+=1 ){
 			neighbors = 0;
@@ -78,8 +79,7 @@ Universe.prototype.oneTurn = function(){
 			}
 		}
 	}
-	//console.log("CELLS TO DIE!!");
-	//console.log(cellsToDie);
+	
 	for(i = 0;i<cellsToDie.length;i+=1){
 		this.leUniverse[cellsToDie[i]['i']][cellsToDie[i]['j']] = 0;
 		event = new CustomEvent('cellDeath', { 'detail': {y:cellsToDie[i]['i'],x:cellsToDie[i]['j']} });

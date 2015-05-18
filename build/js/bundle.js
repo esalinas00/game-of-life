@@ -15,7 +15,7 @@ var MyHandler = new Handler(function(data){
 document.addEventListener('cellDeath',function(e){
 	var data = e.detail;
 	MyPainter.redrawCell.call(MyPainter,data.y,data.x,0);
-	MyUniverse.logU.call(MyUniverse);
+	//MyUniverse.logU.call(MyUniverse);
 },false);
 console.log("mufasa");
 },{"./handler":2,"./painter":3,"./universe":4}],2:[function(require,module,exports){
@@ -130,6 +130,7 @@ Universe.prototype.oneTurn = function(){
 	//console.log(board[-1][-1]);
 	var neighbors;
 	var cellsToDie = [];
+	var newLife = [];
 	for(; i < this.width; i+=1 ){
 		for(j = 0; j < this.width; j+=1 ){
 			neighbors = 0;
@@ -161,8 +162,7 @@ Universe.prototype.oneTurn = function(){
 			}
 		}
 	}
-	//console.log("CELLS TO DIE!!");
-	//console.log(cellsToDie);
+	
 	for(i = 0;i<cellsToDie.length;i+=1){
 		this.leUniverse[cellsToDie[i]['i']][cellsToDie[i]['j']] = 0;
 		event = new CustomEvent('cellDeath', { 'detail': {y:cellsToDie[i]['i'],x:cellsToDie[i]['j']} });
