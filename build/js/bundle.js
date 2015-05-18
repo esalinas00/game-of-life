@@ -20,7 +20,9 @@ document.addEventListener('cellDeath',function(e){
 console.log("mufasa");
 },{"./handler":2,"./painter":3,"./universe":4}],2:[function(require,module,exports){
 function Handler (cb,next) {
-
+	var self = this;
+	this.intId;
+	var paused = true;
 	var canvas = document.getElementById('game');
 	canvas.addEventListener('click',function (e) {
 		var i = Math.floor(e.offsetY/(20+1));
@@ -34,9 +36,23 @@ function Handler (cb,next) {
       		case 68:
 		        //console.log("Right action");
 		       	//code here
-	        	console.log("NEXT TURN");
-	        	next();
+
+	        	//next
+	        	console.log(self.intId," self.intId");
+	        	if(paused){
+	        		console.log("GAME RESUMED");
+	        		self.intId = setInterval(next,350);
+	        		paused = false;
+	        	}
 	        	break;
+			case 37:
+			case 65:
+				//console.log("Left action");
+				//code here
+				console.log("PAUSE");
+				clearInterval(self.intId);
+				paused = true;
+				break;
 	        default:
 	        	break;
 		}
@@ -177,7 +193,6 @@ Universe.prototype.oneTurn = function(){
 	}
 
 	for(i = 0;i<newLife.length;i+=1){
-		console.log(newLife[i]);
 		this.leUniverse[newLife[i]['i']][newLife[i]['j']] = 1;
 		event = new CustomEvent('cellDeath', { 'detail': {y:newLife[i]['i'],x:newLife[i]['j'],state:1} });
 		document.dispatchEvent(event);	

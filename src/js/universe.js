@@ -94,7 +94,6 @@ Universe.prototype.oneTurn = function(){
 	}
 
 	for(i = 0;i<newLife.length;i+=1){
-		console.log(newLife[i]);
 		this.leUniverse[newLife[i]['i']][newLife[i]['j']] = 1;
 		event = new CustomEvent('cellDeath', { 'detail': {y:newLife[i]['i'],x:newLife[i]['j'],state:1} });
 		document.dispatchEvent(event);	
