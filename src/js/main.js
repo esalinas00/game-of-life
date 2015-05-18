@@ -13,7 +13,7 @@ var MyHandler = new Handler(function(data){
 });
 document.addEventListener('cellDeath',function(e){
 	var data = e.detail;
-	console.log(data);
-	MyPainter.redrawCell.call(MyPainter,data.y,data.x,2);
+	MyPainter.redrawCell.call(MyPainter,data.y,data.x,0);
+	MyUniverse.logU.call(MyUniverse);
 },false);
 console.log("mufasa");

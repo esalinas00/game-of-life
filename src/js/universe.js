@@ -81,7 +81,7 @@ Universe.prototype.oneTurn = function(){
 	//console.log("CELLS TO DIE!!");
 	//console.log(cellsToDie);
 	for(i = 0;i<cellsToDie.length;i+=1){
-		console.log(cellsToDie[i]);
+		this.leUniverse[cellsToDie[i]['i']][cellsToDie[i]['j']] = 0;
 		event = new CustomEvent('cellDeath', { 'detail': {y:cellsToDie[i]['i'],x:cellsToDie[i]['j']} });
 		document.dispatchEvent(event);	
 	}

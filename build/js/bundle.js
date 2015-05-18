@@ -14,8 +14,8 @@ var MyHandler = new Handler(function(data){
 });
 document.addEventListener('cellDeath',function(e){
 	var data = e.detail;
-	console.log(data);
-	MyPainter.redrawCell.call(MyPainter,data.y,data.x,2);
+	MyPainter.redrawCell.call(MyPainter,data.y,data.x,0);
+	MyUniverse.logU.call(MyUniverse);
 },false);
 console.log("mufasa");
 },{"./handler":2,"./painter":3,"./universe":4}],2:[function(require,module,exports){
@@ -74,21 +74,7 @@ Painter.prototype.redrawCell = function(y,x,state) {
 	//console.log(arguments);
 	this.ctx.beginPath();
 	this.ctx.fillStyle = this.colorMappings[state];
-	
-	if(state === 2){
-		console.log("arguments: ",arguments);
-		/**console.log("something gotta die!!");
-		//this.ctx.fillRect(0,0,400,400);
-		console.log("fillStyle ", this.ctx.fillStyle);
-		console.log("blockSize ", this.blockSize);
-		console.log("separation ", this.separation);
-		**/
-	}
-
-
 	this.ctx.fillRect((this.blockSize+this.separation)*x,(this.blockSize+this.separation)*y,this.blockSize,this.blockSize);
-	
-	
 
 	}
 
@@ -178,7 +164,7 @@ Universe.prototype.oneTurn = function(){
 	//console.log("CELLS TO DIE!!");
 	//console.log(cellsToDie);
 	for(i = 0;i<cellsToDie.length;i+=1){
-		console.log(cellsToDie[i]);
+		this.leUniverse[cellsToDie[i]['i']][cellsToDie[i]['j']] = 0;
 		event = new CustomEvent('cellDeath', { 'detail': {y:cellsToDie[i]['i'],x:cellsToDie[i]['j']} });
 		document.dispatchEvent(event);	
 	}

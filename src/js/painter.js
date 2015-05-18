@@ -27,21 +27,7 @@ Painter.prototype.redrawCell = function(y,x,state) {
 	//console.log(arguments);
 	this.ctx.beginPath();
 	this.ctx.fillStyle = this.colorMappings[state];
-	
-	if(state === 2){
-		console.log("arguments: ",arguments);
-		/**console.log("something gotta die!!");
-		//this.ctx.fillRect(0,0,400,400);
-		console.log("fillStyle ", this.ctx.fillStyle);
-		console.log("blockSize ", this.blockSize);
-		console.log("separation ", this.separation);
-		**/
-	}
-
-
 	this.ctx.fillRect((this.blockSize+this.separation)*x,(this.blockSize+this.separation)*y,this.blockSize,this.blockSize);
-	
-	
 
 	}
 
