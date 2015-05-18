@@ -6,23 +6,11 @@ var Handler = require('./handler');
 var MyPainter = new Painter();
 var MyUniverse = new Universe();
 var MyHandler = new Handler(function(data){
-	console.log(data);
 	MyUniverse.toggleCell.call(MyUniverse,data.i,data.j)
-	MyUniverse.logU.call(MyUniverse);
+	//MyUniverse.logU.call(MyUniverse);
+	MyPainter.redrawCell.call(MyPainter,data.i,data.j,MyUniverse.leUniverse[data.i][data.j]);
 });
 console.log("mufasa");
-
-/**
-var canvas = document.getElementById('game');
-canvas.addEventListener('click',function (e) {
-	var i = Math.floor(e.offsetY/(20+1));
-	var j = Math.floor(e.offsetX/(20+1));
-	console.log("y,x");
-	console.log(i,j);
-	MyUniverse.toggleCell(i,j);
-	MyUniverse.logU();
-},false);
-**/
 },{"./handler":2,"./painter":3,"./universe":4}],2:[function(require,module,exports){
 function Handler (cb) {
 
@@ -30,41 +18,43 @@ function Handler (cb) {
 	canvas.addEventListener('click',function (e) {
 		var i = Math.floor(e.offsetY/(20+1));
 		var j = Math.floor(e.offsetX/(20+1));
-		console.log("y,x");
-		console.log(i,j);
-		//MyUniverse.toggleCell(i,j);
-		//MyUniverse.logU();
 		cb({i:i,j:j});
 	},false);
-
-console.log("Handler constructor");
 }
 
 module.exports = Handler;
 },{}],3:[function(require,module,exports){
 function Painter(){
-  var canvas = document.getElementById('game'); 
-  var gameLength = 20;
-  var ctx;
-  var blockSize = 20;
-  var separation = 1;
+	var canvas = document.getElementById('game'); 
+	this.gameLength = 20;
+	this.ctx;
+	this.blockSize = 20;
+	this.separation = 1;
+	this.colorMappings = ['#fff','#2196f3','#bdbdbd'];
+	
+	if(canvas.getContext){
+  	this.ctx = canvas.getContext('2d');
 
-   if(canvas.getContext){
-  	ctx = canvas.getContext('2d');
+  	this.ctx.beginPath();
+    this.ctx.fillStyle = "#000";
+    this.ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  	ctx.beginPath();
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  	for (var i=0;i<gameLength;i++){
-    	for (var j=0;j<gameLength;j++){
-        ctx.beginPath();
-        ctx.fillStyle = "#fff";
-        ctx.fillRect((blockSize+separation)*i,(blockSize+separation)*j,blockSize,blockSize);
+  	for (var i=0;i<this.gameLength;i++){
+    	for (var j=0;j<this.gameLength;j++){
+        this.ctx.beginPath();
+        this.ctx.fillStyle = "#fff";
+        this.ctx.fillRect((this.blockSize+this.separation)*i,(this.blockSize+this.separation)*j,this.blockSize,this.blockSize);
     	}
   	}
   }
 }
+
+Painter.prototype.redrawCell = function(y,x,state) {	
+	//console.log(arguments);
+	this.ctx.beginPath();
+	this.ctx.fillStyle = this.colorMappings[state];
+	this.ctx.fillRect((this.blockSize+this.separation)*x,(this.blockSize+this.separation)*y,this.blockSize,this.blockSize);
+	}
 
 module.exports = Painter;
 
