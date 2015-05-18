@@ -15,7 +15,7 @@ var MyHandler = new Handler(function(data){
 document.addEventListener('cellDeath',function(e){
 	var data = e.detail;
 	console.log(data);
-	MyPainter.redrawCell.call(MyPainter,data.i,data.j,2);
+	MyPainter.redrawCell.call(MyPainter,data.y,data.x,2);
 },false);
 console.log("mufasa");
 },{"./handler":2,"./painter":3,"./universe":4}],2:[function(require,module,exports){
