@@ -4,8 +4,27 @@ p {
 }
 
 canvas {
+	display: block;
 	box-shadow: 0 0 0 2px green;
 	position: relative;
 	left: 50%;
 	transform: translate(-209px,0);
+}
+
+.menu {
+	width: 500px;
+	height: 40px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.button	{
+	text-decoration: none;
+	background: #64B5F6;
+	color: white;
+	padding:  6px 10px;
+
+	&:hover{
+		background: darken(#64B5F6,6%);
+	}
 }

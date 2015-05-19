@@ -1,1 +1,1 @@
-p{font-size:40px;text-align:center}canvas{box-shadow:0 0 0 2px green;position:relative;left:50%;transform:translate(-209px,0)}
+.menu,p{text-align:center}p{font-size:40px}canvas{display:block;box-shadow:0 0 0 2px green;position:relative;left:50%;transform:translate(-209px,0)}.menu{width:500px;height:40px;margin:0 auto}.button{text-decoration:none;background:#64B5F6;color:#fff;padding:6px 10px}.button:hover{background:#47a7f4}
