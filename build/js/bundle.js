@@ -6,16 +6,14 @@ var Handler = require('./handler');
 var MyPainter = new Painter();
 var MyUniverse = new Universe();
 var MyHandler = new Handler(function(data){
-	MyUniverse.toggleCell.call(MyUniverse,data.i,data.j)
-	//MyUniverse.logU.call(MyUniverse);
+	MyUniverse.toggleCell.call(MyUniverse,data.i,data.j);
 	MyPainter.redrawCell.call(MyPainter,data.i,data.j,MyUniverse.leUniverse[data.i][data.j]);
 },function(){
 	MyUniverse.oneTurn.call(MyUniverse);
 });
-document.addEventListener('cellDeath',function(e){
+document.addEventListener('cellChange',function(e){
 	var data = e.detail;
 	MyPainter.redrawCell.call(MyPainter,data.y,data.x,data.state);
-	//MyUniverse.logU.call(MyUniverse);
 },false);
 console.log("mufasa");
 },{"./handler":2,"./painter":3,"./universe":4}],2:[function(require,module,exports){
@@ -90,9 +88,8 @@ function Universe(){
 	this.width = 20;
 	this.leUniverse = [];
 	/** Cell states
-	0 : none,
-	1 : alive,
-	2 : dead,
+	0 : dead,
+	1 : alive
 	**/
 	function init() {
 		var i = 0, j = 0;
@@ -102,7 +99,6 @@ function Universe(){
 				this.leUniverse[i][j] = 0;
 			}
 		}
-
 	}	
 	init.call(this);
 }
@@ -132,10 +128,8 @@ Universe.prototype.oneTurn = function(){
 	var i = 0, j;
 	var event, newState;
 	var board = this.leUniverse;
-	//console.log(board[-1][-1]);
 	var neighbors;
-	var cellsToDie = [];
-	var newLife = [];
+	var cellsToChange = [];
 	for(; i < this.width; i+=1 ){
 		for(j = 0; j < this.width; j+=1 ){
 			neighbors = 0;
@@ -143,49 +137,41 @@ Universe.prototype.oneTurn = function(){
 			var i2 = i-1, limitI = i+1;
 			var j2,limitJ;
 			//needs to be alive to die :v
-			//if(board[i][j] === 1){				
-				for(;i2<=limitI;i2+=1){
-					j2 = j-1, limitJ = j + 1;
-					for(;j2<=limitJ;j2+=1){
-						try {
-							if(board[i2][j2] === 1){
-								neighbors +=1;
-							}
-						} catch (e) {
-							//Type error exception thow when accesing an unexisting array property
-							//example: board[-1][-1]
+			for(;i2<=limitI;i2+=1){
+				j2 = j-1, limitJ = j + 1;
+				for(;j2<=limitJ;j2+=1){
+					try {
+						if(board[i2][j2] === 1){
+							neighbors +=1;
 						}
+					} catch (e) {
+						//Type error exception thow when accesing an unexisting array property
+						//example: board[-1][-1]
 					}
 				}
+			}
 
-				if(board[i][j] === 1){	
-					//substract himself
-					neighbors-=1;
-					//if there're less than 2 neighbors, cell dies cause underpopulation
-					//if there're more than 3 neighbors, cell dies cause overpopulation
-					if(neighbors < 2 || neighbors > 3){
-						cellsToDie.push({i:i,j:j});
-					}
-				}else{
-					if(neighbors === 3){
-						newLife.push({i:i,j:j});
-					}
+			if(board[i][j] === 1){	
+				//substract himself
+				neighbors-=1;
+				//if there're less than 2 neighbors, cell dies cause underpopulation
+				//if there're more than 3 neighbors, cell dies cause overpopulation
+				if(neighbors < 2 || neighbors > 3){
+					cellsToChange.push({i:i,j:j,newState:0});
 				}
-			//}
+			}else{
+				if(neighbors === 3){
+					cellsToChange.push({i:i,j:j,newState:1});
+				}
+			}
 		}
 	}
 	
-	for(i = 0;i<cellsToDie.length;i+=1){
-		this.leUniverse[cellsToDie[i]['i']][cellsToDie[i]['j']] = 0;
-		event = new CustomEvent('cellDeath', { 'detail': {y:cellsToDie[i]['i'],x:cellsToDie[i]['j'],state:0} });
-		document.dispatchEvent(event);	
-	}
-
-	for(i = 0;i<newLife.length;i+=1){
-		this.leUniverse[newLife[i]['i']][newLife[i]['j']] = 1;
-		event = new CustomEvent('cellDeath', { 'detail': {y:newLife[i]['i'],x:newLife[i]['j'],state:1} });
-		document.dispatchEvent(event);	
-	}
+	cellsToChange.forEach(function(cell,index,array){
+		this.toggleCell(cell.i,cell.j);
+		event = new CustomEvent('cellChange', { 'detail': {y:cell.i,x:cell.j,state:cell.newState} });
+		document.dispatchEvent(event);
+	},this);
 };
 
 module.exports = Universe;
